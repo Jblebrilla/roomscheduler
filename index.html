@@ -342,6 +342,9 @@
   </div>
   <div class="toolbar">
     <button class="btn" id="exportBtn">Export week as CSV (Excel)</button>
+    <button class="btn" onclick="testSharePointConnection()">Test SharePoint List</button>
+  </div>
+
   </div>
   <div class="status-line" id="statusLine" role="status" aria-live="polite"></div>
 </main>
@@ -386,7 +389,8 @@
 
   // User.Read is all this app needs: it reads the signed-in user's name and id.
   // Nothing here calls SharePoint or Graph, so no write scope is requested.
-  var LOGIN_SCOPES = ["User.Read"];
+  var LOGIN_SCOPES = ["User.Read", "Sites.ReadWrite.All"];
+
 
   var DOW = ["Mon", "Tue", "Wed", "Thu", "Fri"];
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -833,7 +837,66 @@
       setStatus("Couldn't gather this week's bookings for export (" + formatError(err) + ").");
     });
   }
+async function getAccessToken() {
+  var account = msalInstance.getActiveAccount() || msalInstance.getAllAccounts()[0];
 
+  if (!account) {
+    account = await ensureSignedIn();
+  }
+
+  var request = {
+    scopes: LOGIN_SCOPES,
+    account: account
+  };
+
+  try {
+    var response = await msalInstance.acquireTokenSilent(request);
+    return response.accessToken;
+  } catch (error) {
+    var response = await msalInstance.acquireTokenPopup(request);
+    return response.accessToken;
+  }
+}
+
+async function graphGet(path) {
+  var token = await getAccessToken();
+
+  var response = await fetch("https://graph.microsoft.com/v1.0" + path, {
+
+
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+
+  return response.json();
+}
+
+async function testSharePointConnection() {
+  try {
+    var site = await graphGet(
+      "/sites/mpwsinc-my.sharepoint.com:/personal/jblebrilla_mpws_com_ph"
+    );
+
+    console.log("SharePoint site:", site);
+
+    var list = await graphGet(
+      "/sites/" + site.id + "/lists/RoomBooking"
+    );
+
+    console.log("RoomBooking list:", list);
+
+    alert("Connected to Microsoft List: " + list.displayName);
+  } catch (error) {
+    console.error(error);
+    alert("SharePoint connection failed. Check the browser Console for details.");
+  }
+}
+window.testSharePointConnection = testSharePointConnection;
   exportBtn.addEventListener("click", exportWeekCsv);
 
   /* ---------- Auth ---------- */
