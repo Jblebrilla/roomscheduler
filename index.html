@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Room Scheduler</title>
+
+
+<style type="text/css">@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:400;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:400;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:400;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/greek/wght/normal.woff2);unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:400;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:400;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:400;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/latin-ext/wght/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:500;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:500;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/latin-ext/wght/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:500;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:500;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:500;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/greek/wght/normal.woff2);unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:500;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:600;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/greek/wght/normal.woff2);unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:600;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:600;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/latin-ext/wght/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:600;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:600;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:600;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:700;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/latin-ext/wght/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:700;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:700;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/greek/wght/normal.woff2);unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:700;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:700;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:'IBM Plex Sans';font-style:normal;font-weight:700;src:url(/cf-fonts/v/ibm-plex-sans/5.2.8/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:400;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:400;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/cyrillic/400/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:400;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/latin-ext/400/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:400;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/vietnamese/400/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:400;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/cyrillic-ext/400/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:500;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/latin-ext/500/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:500;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/vietnamese/500/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:500;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/cyrillic/500/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:500;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/cyrillic-ext/500/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:500;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/latin/500/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:600;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/latin/600/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:600;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/cyrillic/600/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:600;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/cyrillic-ext/600/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:600;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/latin-ext/600/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'IBM Plex Mono';font-style:normal;font-weight:600;src:url(/cf-fonts/s/ibm-plex-mono/5.2.7/vietnamese/600/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}</style>
+
+<!-- MSAL Browser SDK -->
+<script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
+<!-- Firebase (compat build, matching the db.collection() / db.doc() calls below).
+     ADD THIS BLOCK TO YOUR PAGE - see the setup notes in the reply. -->
+<!--
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+-->
+
+<style>
+  :root {
+    --paper: #EFEDE4;
+    --paper-raised: #F7F5EE;
+    --ink: #24262B;
+    --ink-soft: #5B5D57;
+    --line: #D8D4C8;
+    --line-strong: #B9B4A4;
+    --accent-big: #2E6B5C;
+    --accent-board: #6B3A4A;
+    --accent-training: #34587A;
+    --accent-interview: #A67C2E;
+    --danger: #A6402F;
+    --focus: #1D6FE0;
+    --radius: 3px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1B1C1F;
+      --paper-raised: #242529;
+      --ink: #EDEAE1;
+      --ink-soft: #9C9A91;
+      --line: #38393D;
+      --line-strong: #4B4C50;
+      --accent-big: #5FAF98;
+      --accent-board: #C97D93;
+      --accent-training: #7DA6D6;
+      --accent-interview: #E0AF5C;
+      --danger: #E2745F;
+      --focus: #6AA6FF;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1B1C1F;
+    --paper-raised: #242529;
+    --ink: #EDEAE1;
+    --ink-soft: #9C9A91;
+    --line: #38393D;
+    --line-strong: #4B4C50;
+    --accent-big: #5FAF98;
+    --accent-board: #C97D93;
+    --accent-training: #7DA6D6;
+    --accent-interview: #E0AF5C;
+    --danger: #E2745F;
+    --focus: #6AA6FF;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .mono { font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace; }
+
+  header.top {
+    padding: 22px 24px 16px;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    background: var(--paper);
+    z-index: 5;
+  }
+  .top-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .rooms-key {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .rooms-key span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 9px; height: 9px; border-radius: 1px; display: inline-block; }
+
+  .week-nav {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .week-nav button.arrow {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 14px;
+    flex: 0 0 auto;
+  }
+  .week-nav button.arrow:hover { border-color: var(--line-strong); }
+  .day-tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    flex: 1;
+  }
+  .day-tab {
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    padding: 5px 12px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+  .day-tab .dow { font-size: 11px; letter-spacing: 0.02em; }
+  .day-tab .dom { font-family: "IBM Plex Mono", monospace; font-size: 13px; font-weight: 500; }
+  .day-tab:hover { border-color: var(--line); }
+  .day-tab.selected {
+    border-color: var(--ink);
+    color: var(--ink);
+    background: var(--paper-raised);
+  }
+  .day-tab.today .dom { color: var(--focus); }
+
+  main {
+    flex: 1;
+    padding: 20px 24px 40px;
+    overflow: auto;
+  }
+  .grid-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 74px repeat(4, minmax(148px, 1fr));
+    position: relative;
+    min-width: 714px;
+  }
+  .head-cell {
+    position: sticky;
+    top: 0;
+    background: var(--paper-raised);
+    z-index: 2;
+    padding: 10px 10px 9px;
+    border-bottom: 1px solid var(--line-strong);
+    border-left: 1px solid var(--line);
+  }
+  .head-cell:first-child { border-left: none; }
+  .head-cell .room-name { font-size: 13px; font-weight: 600; }
+  .head-cell .bar { height: 3px; border-radius: 2px; margin-top: 7px; }
+  .time-cell {
+    border-top: 1px solid var(--line);
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    padding: 3px 8px 0 0;
+    text-align: right;
+    position: relative;
+    white-space: nowrap;
+  }
+  .time-cell.hour { color: var(--ink); font-weight: 500; }
+  .slot-btn {
+    border: none;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+  .slot-btn:hover { background: rgba(29, 111, 224, 0.08); }
+  .slot-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; z-index: 3; }
+  .slot-btn.hour-line { border-top: 1px solid var(--line-strong); }
+
+  .booking-block {
+    border-radius: var(--radius);
+    margin: 1px 4px;
+    padding: 5px 8px;
+    font-size: 12px;
+    line-height: 1.35;
+    cursor: pointer;
+    color: #fff;
+    overflow: hidden;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .booking-block .b-title { font-weight: 600; }
+  .booking-block .b-who { opacity: 0.88; font-size: 11px; }
+  .booking-block.mine { box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55); }
+  .booking-block:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+  .toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+  }
+  .btn {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line-strong);
+    background: var(--paper-raised);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .btn:hover { border-color: var(--ink); }
+  .btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .btn.primary:hover { opacity: 0.9; }
+  .btn.danger { color: var(--danger); border-color: var(--danger); background: transparent; }
+  .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+  /* Modal */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 20, 18, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 20;
+    animation: fade-in 0.12s ease-out;
+  }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--paper-raised);
+    border: 1px solid var(--line-strong);
+    border-radius: 5px;
+    width: 100%;
+    max-width: 380px;
+    padding: 20px;
+    animation: rise-in 0.14s ease-out;
+  }
+  @keyframes rise-in { from { transform: translateY(6px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal h2 { margin: 0 0 3px; font-size: 16px; }
+  .modal .sub { color: var(--ink-soft); font-size: 12.5px; margin-bottom: 16px; }
+  .modal label {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 12px 0 5px;
+  }
+  .modal input[type=text], .modal select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 9px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .modal input:focus, .modal select:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .modal-actions .left { display: flex; gap: 8px; }
+  .warn {
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 8px;
+    min-height: 14px;
+  }
+  .view-row { font-size: 13.5px; margin: 4px 0; }
+  .view-row .lbl { color: var(--ink-soft); display: inline-block; width: 64px; }
+
+  .status-line {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 10px;
+  }
+
+  @media (max-width: 560px) {
+    header.top { padding: 16px 16px 12px; }
+    main { padding: 14px 12px 32px; }
+    h1 { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <h1>Room Scheduler</h1>
+    <div class="rooms-key" id="roomsKey"></div>
+  </div>
+  <div class="week-nav">
+    <button class="arrow" id="prevWeek" aria-label="Previous week">&larr;</button>
+    <div class="day-tabs" id="dayTabs"></div>
+    <button class="arrow" id="nextWeek" aria-label="Next week">&rarr;</button>
+  </div>
+</header>
+
+<main>
+  <div class="grid-wrap">
+    <div class="grid" id="grid"></div>
+  </div>
+  <div class="toolbar">
+    <button class="btn" id="exportBtn">Export week as CSV (Excel)</button>
+  </div>
+  <div class="status-line" id="statusLine" role="status" aria-live="polite"></div>
+</main>
+
+<div id="modalRoot"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Configuration ---------- */
+
+  var ROOMS = [
+    { id: "big",       name: "BIG Meeting Room", color: "var(--accent-big)" },
+    { id: "board",     name: "Board Room",       color: "var(--accent-board)" },
+    { id: "training",  name: "Training Room",    color: "var(--accent-training)" },
+    { id: "interview", name: "Interview Room",   color: "var(--accent-interview)" }
+  ];
+
+  var START_HOUR = 8;
+  var END_HOUR = 18;
+  var SLOT_MIN = 30;
+  var SLOT_COUNT = ((END_HOUR - START_HOUR) * 60) / SLOT_MIN; // 20 half-hour slots
+  var DURATIONS = [30, 60, 90, 120];
+  var DAYS_IN_WEEK = 5;
+
+  /* Firebase project config. Fill this in and the app will start persisting
+     bookings; leave it null and the page runs in read-only preview mode. */
+  var firebaseConfig = null; // e.g. { apiKey: "…", projectId: "…", appId: "…" }
+
+  var msalConfig = {
+    auth: {
+      clientId: "78b818bd-d522-45e2-b26b-018f17e6f5f6",
+      authority: "https://login.microsoftonline.com/b6430d0a-2d9f-4c12-ae6e-5b4d8aad7644",
+      redirectUri: window.location.origin
+    },
+    cache: {
+      cacheLocation: "sessionStorage",
+      storeAuthStateInCookie: false
+    }
+  };
+
+  // User.Read is all this app needs: it reads the signed-in user's name and id.
+  // Nothing here calls SharePoint or Graph, so no write scope is requested.
+  var LOGIN_SCOPES = ["User.Read"];
+
+  var DOW = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  /* ---------- Date helpers ---------- */
+
+  function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+
+  function isoDate(d) {
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  }
+
+  function mondayOf(d) {
+    var x = new Date(d);
+    var day = x.getDay(); // 0 Sun .. 6 Sat
+    x.setDate(x.getDate() + (day === 0 ? -6 : 1 - day));
+    x.setHours(0, 0, 0, 0);
+    return x;
+  }
+
+  function addDays(d, n) {
+    var x = new Date(d);
+    x.setDate(x.getDate() + n);
+    return x;
+  }
+
+  function slotToLabel(i) {
+    var totalMin = START_HOUR * 60 + i * SLOT_MIN;
+    var h24 = Math.floor(totalMin / 60);
+    var m = totalMin % 60;
+    var h12 = h24 % 12 || 12;
+    return h12 + ":" + pad2(m) + " " + (h24 < 12 ? "AM" : "PM");
+  }
+
+  function escapeHtml(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+
+  function formatError(err, fallback) {
+    return (err && err.code) ? err.code : (err && err.message) ? err.message : (fallback || "error");
+  }
+
+  /* ---------- State ---------- */
+
+  var today = new Date();
+  var todayIso = isoDate(today);
+  var thisWeekStart = mondayOf(today);
+
+  var weekStart = thisWeekStart;
+  // Start on today, or on Monday when today falls on a weekend.
+  var selectedDate = (today.getDay() === 0 || today.getDay() === 6)
+    ? isoDate(thisWeekStart)
+    : todayIso;
+
+  var db = null;
+  var downloadsCap = null;
+  var unsub = null;
+  var bookings = [];
+  var myId = null;
+  var myName = "";
+  var pendingWrite = false;
+
+  var gridEl = document.getElementById("grid");
+  var dayTabsEl = document.getElementById("dayTabs");
+  var roomsKeyEl = document.getElementById("roomsKey");
+  var statusEl = document.getElementById("statusLine");
+  var modalRoot = document.getElementById("modalRoot");
+  var exportBtn = document.getElementById("exportBtn");
+
+  function ready() { return !!db; }
+
+  function roomById(id) {
+    for (var i = 0; i < ROOMS.length; i++) {
+      if (ROOMS[i].id === id) return ROOMS[i];
+    }
+    return null;
+  }
+
+  /* ---------- Rendering ---------- */
+
+  function renderRoomsKey() {
+    roomsKeyEl.innerHTML = ROOMS.map(function (r) {
+      return '<span><span class="swatch" style="background:' + r.color + '"></span>' +
+        escapeHtml(r.name) + "</span>";
+    }).join("");
+  }
+
+  function renderDayTabs() {
+    var html = "";
+    for (var i = 0; i < DAYS_IN_WEEK; i++) {
+      var d = addDays(weekStart, i);
+      var iso = isoDate(d);
+      var cls = "day-tab" +
+        (iso === selectedDate ? " selected" : "") +
+        (iso === todayIso ? " today" : "");
+      html += '<button type="button" class="' + cls + '" data-date="' + iso + '"' +
+        (iso === selectedDate ? ' aria-current="date"' : "") + ">" +
+        '<span class="dow">' + DOW[i] + "</span>" +
+        '<span class="dom mono">' + d.getDate() + " " + MONTHS[d.getMonth()] + "</span>" +
+        "</button>";
+    }
+    dayTabsEl.innerHTML = html;
+  }
+
+  function renderGridShell() {
+    var html = '<div class="head-cell"></div>';
+
+    ROOMS.forEach(function (r) {
+      html += '<div class="head-cell"><div class="room-name">' + escapeHtml(r.name) +
+        '</div><div class="bar" style="background:' + r.color + '"></div></div>';
+    });
+
+    for (var i = 0; i < SLOT_COUNT; i++) {
+      var isHour = (i % 2) === 0;
+      html += '<div class="time-cell' + (isHour ? " hour" : "") + ' mono" style="grid-row:' + (i + 2) + '">' +
+        (isHour ? slotToLabel(i) : "") + "</div>";
+
+      for (var c = 0; c < ROOMS.length; c++) {
+        html += '<button type="button" class="slot-btn' + (isHour ? " hour-line" : "") + '" ' +
+          'style="grid-column:' + (c + 2) + ";grid-row:" + (i + 2) + ';" ' +
+          'data-room="' + ROOMS[c].id + '" data-slot="' + i + '" ' +
+          'aria-label="Book ' + escapeHtml(ROOMS[c].name) + " at " + slotToLabel(i) + '"></button>';
+      }
+    }
+
+    gridEl.innerHTML = html;
+  }
+
+  function renderBookingOverlays() {
+    // Remove only the overlay blocks, leaving the slot grid intact.
+    Array.prototype.forEach.call(gridEl.querySelectorAll(".booking-block"), function (el) {
+      el.remove();
+    });
+
+    bookings.forEach(function (b) {
+      var colIndex = ROOMS.findIndex(function (r) { return r.id === b.room; });
+      if (colIndex === -1) return;
+
+      var room = ROOMS[colIndex];
+      var start = Math.max(0, b.startSlot);
+      var end = Math.min(SLOT_COUNT, b.endSlot);
+      if (end <= start) return;
+
+      var el = document.createElement("div");
+      el.className = "booking-block" + (myId && b.bookedById === myId ? " mine" : "");
+      el.style.gridColumn = String(colIndex + 2);
+      el.style.gridRow = (start + 2) + " / " + (end + 2);
+      el.style.background = room.color;
+      el.tabIndex = 0;
+      el.setAttribute("role", "button");
+      el.innerHTML = '<span class="b-title">' + escapeHtml(b.title || room.name) + "</span>" +
+        '<span class="b-who">' + escapeHtml(b.bookedByName || "Someone") + "</span>";
+
+      el.addEventListener("click", function () { openViewModal(b); });
+      el.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openViewModal(b);
+        }
+      });
+
+      gridEl.appendChild(el);
+    });
+  }
+
+  function setStatus(text) { statusEl.textContent = text; }
+
+  function describeDay(count) {
+    if (!count) return "No bookings yet for this day.";
+    return count + " booking" + (count === 1 ? "" : "s") + " on this day.";
+  }
+
+  /* ---------- Data subscription ---------- */
+
+  function subscribeToDate(dateIso) {
+    if (unsub) { unsub(); unsub = null; }
+
+    if (!ready()) {
+      bookings = [];
+      renderBookingOverlays();
+      return; // status line is owned by init() in this mode
+    }
+
+    // Keep the current day's blocks on screen until the new snapshot lands,
+    // instead of blanking the grid on every tab click.
+    setStatus("Loading availability…");
+
+    unsub = db.collection("bookings").where("date", "==", dateIso).onSnapshot(
+      function (snap) {
+        bookings = snap.docs.map(function (d) {
+          var data = d.data() || {};
+          return {
+            id: d.id,
+            room: data.room,
+            date: data.date,
+            startSlot: data.startSlot,
+            endSlot: data.endSlot,
+            title: data.title,
+            bookedById: data.bookedById || null,
+            bookedByName: data.bookedByName || ""
+          };
+        });
+        renderBookingOverlays();
+        setStatus(describeDay(bookings.length));
+      },
+      function (err) {
+        setStatus("Live updates unavailable (" + formatError(err) + "). Reload to refresh.");
+      }
+    );
+  }
+
+  function overlaps(roomId, startSlot, endSlot, ignoreId) {
+    return bookings.some(function (b) {
+      if (b.room !== roomId) return false;
+      if (ignoreId && b.id === ignoreId) return false;
+      return startSlot < b.endSlot && endSlot > b.startSlot;
+    });
+  }
+
+  /* ---------- Modals ---------- */
+
+  function closeModal() { modalRoot.innerHTML = ""; }
+
+  function wireModalDismiss() {
+    document.getElementById("ovl").addEventListener("click", function (e) {
+      if (e.target.id === "ovl") closeModal();
+    });
+  }
+
+  function openCreateModal(roomId, startSlot) {
+    var room = roomById(roomId);
+    if (!room) return;
+
+    var maxDuration = (SLOT_COUNT - startSlot) * SLOT_MIN;
+    var durationOptions = DURATIONS.filter(function (m) { return m <= maxDuration; });
+    if (!durationOptions.length) durationOptions = [maxDuration];
+
+    modalRoot.innerHTML =
+      '<div class="overlay" id="ovl">' +
+        '<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">' +
+          '<h2 id="mTitle">Book ' + escapeHtml(room.name) + "</h2>" +
+          '<div class="sub mono">' + selectedDate + " · starts " + slotToLabel(startSlot) + "</div>" +
+          '<label for="fName">Your name</label>' +
+          '<input type="text" id="fName" placeholder="e.g. Jamie Cruz" value="' + escapeHtml(myName) + '">' +
+          '<label for="fTitle">Meeting title</label>' +
+          '<input type="text" id="fTitle" placeholder="e.g. Weekly sync" maxlength="80">' +
+          '<label for="fDuration">Duration</label>' +
+          '<select id="fDuration">' +
+            durationOptions.map(function (m) {
+              var label = m < 60
+                ? m + " min"
+                : (m % 60 === 0 ? (m / 60) + " hr" : (m / 60).toFixed(1) + " hr");
+              return '<option value="' + m + '">' + label + "</option>";
+            }).join("") +
+          "</select>" +
+          '<div class="warn" id="fWarn" role="alert"></div>' +
+          '<div class="modal-actions">' +
+            '<div class="left"><button class="btn" id="btnCancel">Cancel</button></div>' +
+            '<button class="btn primary" id="btnBook">Book room</button>' +
+          "</div>" +
+        "</div>" +
+      "</div>";
+
+    var nameEl = document.getElementById("fName");
+    var titleEl = document.getElementById("fTitle");
+    var durationEl = document.getElementById("fDuration");
+    var warnEl = document.getElementById("fWarn");
+    var btn = document.getElementById("btnBook");
+
+    document.getElementById("btnCancel").addEventListener("click", closeModal);
+    wireModalDismiss();
+    nameEl.focus();
+
+    btn.addEventListener("click", function () {
+      var nameVal = nameEl.value.trim();
+      var titleVal = titleEl.value.trim();
+      var durMin = parseInt(durationEl.value, 10);
+      warnEl.textContent = "";
+
+      if (!nameVal) {
+        warnEl.textContent = "Enter your name so others know who booked it.";
+        return;
+      }
+
+      var endSlot = startSlot + Math.round(durMin / SLOT_MIN);
+
+      if (overlaps(roomId, startSlot, endSlot, null)) {
+        warnEl.textContent = "That room is already booked in part of this window.";
+        return;
+      }
+
+      if (pendingWrite) return;
+      pendingWrite = true;
+      btn.disabled = true;
+      btn.textContent = "Booking…";
+
+      db.collection("bookings").add({
+        room: roomId,
+        date: selectedDate,
+        startSlot: startSlot,
+        endSlot: endSlot,
+        title: titleVal || room.name,
+        bookedById: myId,
+        bookedByName: nameVal,
+        createdAt: Date.now()
+      }).then(function () {
+        closeModal();
+      }).catch(function (err) {
+        btn.disabled = false;
+        btn.textContent = "Book room";
+        warnEl.textContent = "Couldn't save that booking (" + formatError(err) + "). Try again.";
+      }).then(function () {
+        pendingWrite = false;
+      });
+    });
+  }
+
+  function openViewModal(b) {
+    var room = roomById(b.room);
+    if (!room) return;
+
+    var mine = !!myId && b.bookedById === myId;
+
+    modalRoot.innerHTML =
+      '<div class="overlay" id="ovl">' +
+        '<div class="modal" role="dialog" aria-modal="true" aria-labelledby="vTitle">' +
+          '<h2 id="vTitle">' + escapeHtml(b.title || room.name) + "</h2>" +
+          '<div class="sub">' + escapeHtml(room.name) + "</div>" +
+          '<div class="view-row"><span class="lbl">When</span><span class="mono">' +
+            b.date + ", " + slotToLabel(b.startSlot) + "–" + slotToLabel(b.endSlot) + "</span></div>" +
+          '<div class="view-row"><span class="lbl">Booked by</span>' +
+            escapeHtml(b.bookedByName || "Someone") + "</div>" +
+          '<div class="warn" id="vWarn" role="alert"></div>' +
+          '<div class="modal-actions">' +
+            '<div class="left"><button class="btn" id="btnClose">Close</button></div>' +
+            (mine
+              ? '<button class="btn danger" id="btnCancelBooking">Cancel booking</button>'
+              : "") +
+          "</div>" +
+        "</div>" +
+      "</div>";
+
+    document.getElementById("btnClose").addEventListener("click", closeModal);
+    wireModalDismiss();
+
+    var cancelBtn = document.getElementById("btnCancelBooking");
+    if (!cancelBtn) return;
+
+    cancelBtn.addEventListener("click", function () {
+      cancelBtn.disabled = true;
+      cancelBtn.textContent = "Cancelling…";
+      db.collection("bookings").doc(b.id).delete().then(function () {
+        closeModal();
+      }).catch(function (err) {
+        cancelBtn.disabled = false;
+        cancelBtn.textContent = "Cancel booking";
+        document.getElementById("vWarn").textContent =
+          "Couldn't cancel (" + formatError(err) + ").";
+      });
+    });
+  }
+
+  /* ---------- CSV export ---------- */
+
+  function csvEscape(v) {
+    var s = v == null ? "" : String(v);
+    if (/[",\n]/.test(s)) s = '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  }
+
+  function exportWeekCsv() {
+    if (!ready()) {
+      setStatus("Export unavailable right now.");
+      return;
+    }
+
+    var weekDates = [];
+    for (var i = 0; i < DAYS_IN_WEEK; i++) {
+      weekDates.push(isoDate(addDays(weekStart, i)));
+    }
+
+    exportBtn.disabled = true;
+    exportBtn.textContent = "Preparing export…";
+
+    function resetExportBtn() {
+      exportBtn.disabled = false;
+      exportBtn.textContent = "Export week as CSV (Excel)";
+    }
+
+    Promise.all(weekDates.map(function (dateIso) {
+      return db.collection("bookings").where("date", "==", dateIso).get()
+        .then(function (snap) {
+          return snap.docs.map(function (d) {
+            var data = d.data() || {};
+            return {
+              date: dateIso,
+              room: data.room,
+              startSlot: data.startSlot,
+              endSlot: data.endSlot,
+              title: data.title,
+              bookedByName: data.bookedByName
+            };
+          });
+        });
+    })).then(function (perDay) {
+      var rows = [["Date", "Room", "Start", "End", "Title", "Booked by"]];
+
+      perDay.forEach(function (list) {
+        list.sort(function (a, b) { return a.startSlot - b.startSlot; });
+        list.forEach(function (b) {
+          var room = roomById(b.room);
+          rows.push([
+            b.date,
+            room ? room.name : b.room,
+            slotToLabel(b.startSlot),
+            slotToLabel(b.endSlot),
+            b.title || "",
+            b.bookedByName || ""
+          ]);
+        });
+      });
+
+      var csv = rows.map(function (r) { return r.map(csvEscape).join(","); }).join("\r\n");
+
+      if (!downloadsCap) {
+        resetExportBtn();
+        setStatus("Downloads aren't available in this view.");
+        return;
+      }
+
+      var filename = "room-bookings-" + weekDates[0] + "-to-" + weekDates[DAYS_IN_WEEK - 1] + ".csv";
+
+      downloadsCap.save({ filename: filename, data: csv }).then(function () {
+        resetExportBtn();
+      }).catch(function (err) {
+        resetExportBtn();
+        if (err && err.code === "declined") return;
+        setStatus("Export failed (" + formatError(err) + ").");
+      });
+    }).catch(function (err) {
+      resetExportBtn();
+      setStatus("Couldn't gather this week's bookings for export (" + formatError(err) + ").");
+    });
+  }
+
+  exportBtn.addEventListener("click", exportWeekCsv);
+
+  /* ---------- Auth ---------- */
+
+  var msalInstance = null;
+
+  function initAuth() {
+    if (typeof msal === "undefined" || !msal.PublicClientApplication) {
+      return Promise.reject(new Error("MSAL failed to load."));
+    }
+
+    msalInstance = new msal.PublicClientApplication(msalConfig);
+
+    return msalInstance.initialize().then(function () {
+      var accounts = msalInstance.getAllAccounts();
+      if (accounts.length) {
+        msalInstance.setActiveAccount(accounts[0]);
+        return accounts[0];
+      }
+      return msalInstance.loginPopup({ scopes: LOGIN_SCOPES }).then(function (response) {
+        msalInstance.setActiveAccount(response.account);
+        return response.account;
+      });
+    });
+  }
+
+  /* ---------- Init ---------- */
+
+  function initFirebase() {
+    if (!firebaseConfig || typeof firebase === "undefined" || !firebase.initializeApp) {
+      return false;
+    }
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    return true;
+  }
+
+  function init() {
+    renderRoomsKey();
+    renderDayTabs();
+    renderGridShell();
+
+    // Week / day navigation
+    document.getElementById("prevWeek").addEventListener("click", function () { shiftWeek(-7); });
+    document.getElementById("nextWeek").addEventListener("click", function () { shiftWeek(7); });
+
+    dayTabsEl.addEventListener("click", function (e) {
+      var btn = e.target.closest(".day-tab");
+      if (!btn) return;
+      selectDate(btn.getAttribute("data-date"));
+    });
+
+    gridEl.addEventListener("click", function (e) {
+      var btn = e.target.closest(".slot-btn");
+      if (!btn) return;
+      openCreateModal(btn.getAttribute("data-room"), parseInt(btn.getAttribute("data-slot"), 10));
+    });
+
+    var hasDb = initFirebase();
+    if (!hasDb) {
+      setStatus("Preview mode — bookings are not saved. Add a Firebase config to enable saving.");
+    }
+
+    setStatus("Authenticating with Microsoft Entra ID…");
+
+    initAuth().then(function (account) {
+      myId = account.homeAccountId;
+      myName = account.name || account.username;
+      renderDayTabs();
+      subscribeToDate(selectedDate);
+      if (hasDb) setStatus("Signed in as " + myName);
+    }).catch(function (err) {
+      setStatus("Authentication failed: " + (err.message || err));
+    });
+  }
+
+  function selectDate(iso) {
+    selectedDate = iso;
+    renderDayTabs();
+    subscribeToDate(selectedDate);
+  }
+
+  function shiftWeek(deltaDays) {
+    weekStart = mondayOf(addDays(weekStart, deltaDays));
+    selectDate(isoDate(weekStart));
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
